@@ -1,0 +1,48 @@
+---
+title: "Homework 2"
+author: "Souleymane Doumbia"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+install.packages("readr")
+library(readr)
+```
+
+## Data frame
+```{r}
+url <- "https://raw.githubusercontent.com/Doumgit/Data_607-Assignment_2-/main/RatingTable.csv"
+data <- read_csv(url)
+
+```
+## Adding mean rating of each person
+```{r}
+# Add the new column with the mean rating
+new_data <- data %>%
+  mutate(Mean_Rating = rowMeans(select(., -name), na.rm = TRUE))
+
+# View the new data frame with the mean rating
+print(new_data)
+```
+
+## Rating for each movie
+
+```{r}
+# 1. Computing the mean ratings for each movie
+mean_ratings <- colMeans(select(new_data, -name), na.rm = TRUE)
+
+# 2. Creating a new row with these mean ratings
+new_row <- data.frame(name = "Mean", t(mean_ratings))
+
+# 3. Appendding this new row to the existing data frame
+final_ratings <- bind_rows(new_data, new_row)
+
+print(final_ratings)
+```
+
